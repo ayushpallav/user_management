@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import datetime
 from sys import path
 
 from configurations import Configuration
@@ -141,3 +142,9 @@ class Settings(Configuration):
 
 
     # Project related variables
+    # JWT token related settings
+
+    JWT_AUTH = {
+        'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+        'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=30),
+    }
