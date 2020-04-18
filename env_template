@@ -1,0 +1,11 @@
+# General purpose environment variables
+#######################################
+SECRET_KEY=
+
+# Credentials for postgres db connection
+########################################
+POSTGRES_DB_NAME=
+POSTGRES_USER_NAME=
+POSTGRES_USER_PASSWORD=
+POSTGRES_DB_HOST=
+POSTGRES_DB_PORT=
