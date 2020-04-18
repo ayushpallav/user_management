@@ -14,10 +14,9 @@ class AuthView(TokenObtainPairView):
         user = UserSerializer(data=request.data)
         if not user.is_valid():
             return Response(
-              json.dumps({'Error': "Invalid credentials"}),
+              json.dumps({'Error': "Invalid Payload"}),
               status=400,
               content_type="application/json"
             )
         user.save()
         return super().post(request, *args, **kwargs)
-
