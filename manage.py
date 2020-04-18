@@ -3,11 +3,16 @@
 import os
 import sys
 
+import dotenv
 
-def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'user_management.settings')
+
+if __name__ == '__main__':
+    dotenv.load_dotenv()
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'user_management.settings.development')
+    os.environ.setdefault('DJANGO_CONFIGURATION', 'Settings')
     try:
-        from django.core.management import execute_from_command_line
+        from configurations.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "
@@ -15,7 +20,3 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(sys.argv)
-
-
-if __name__ == '__main__':
-    main()
