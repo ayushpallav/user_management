@@ -35,6 +35,7 @@ class Settings(Configuration):
         'django.contrib.staticfiles',
         'rest_framework',
         'authentication',
+        'base'
     ]
 
     MIDDLEWARE = [
@@ -70,18 +71,18 @@ class Settings(Configuration):
     # Database
     # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-    POSTGRES_DB_NAME = os.getenv("POSTGRES_DB_NAME")
-    POSTGRES_USER_NAME = os.getenv("POSTGRES_USER_NAME")
-    POSTGRES_USER_PASSWORD = os.getenv("POSTGRES_USER_PASSWORD")
-    POSTGRES_DB_HOST = os.getenv("POSTGRES_DB_HOST", 'localhost')
-    POSTGRES_DB_PORT = os.getenv("POSTGRES_DB_PORT", '5432')
+    POSTGRES_DB_NAME = os.environ["POSTGRES_DB_NAME"]
+    POSTGRES_USER_NAME = os.environ["POSTGRES_USER_NAME"]
+    POSTGRES_USER_PASSWORD = os.environ["POSTGRES_USER_PASSWORD"]
+    POSTGRES_DB_HOST = os.environ.get("POSTGRES_DB_HOST", 'localhost')
+    POSTGRES_DB_PORT = os.environ.get("POSTGRES_DB_PORT", '5432')
 
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': POSTGRES_DB_NAME,
             'USER': POSTGRES_USER_NAME,
-            'password': POSTGRES_USER_PASSWORD,
+            'PASSWORD': POSTGRES_USER_PASSWORD,
             'HOST': POSTGRES_DB_HOST,
             'PORT': POSTGRES_DB_PORT,
         }
