@@ -3,6 +3,7 @@ import json
 from rest_framework import views
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth.models import User
 
 from authentication.models import UserDetail
 from authentication.serializers import UserSerializer
@@ -19,4 +20,10 @@ class AuthView(TokenObtainPairView):
               content_type="application/json"
             )
         user.save()
-        return super().post(request, *args, **kwargs)
+        render = super().post(request, *args, **kwargs)
+        obj = User.objects.filter(
+            username=user.data.get('username'),
+            email=user.data.get('email')
+        ).first()
+        render.data['user_id'] = obj.id
+        return render
