@@ -6,3 +6,4 @@ django-configurations==2.1
 ipython
 PyJWT==1.7.1
 djangorestframework-simplejwt
+django-rest-swagger

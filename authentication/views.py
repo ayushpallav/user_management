@@ -10,6 +10,17 @@ from authentication.serializers import UserSerializer
 
 
 class AuthView(TokenObtainPairView):
+    """
+    Generate a access and refresh token with given payload
+    Parameters needed (all mandatory)
+    - username: string
+    - address: string
+    - phone_number: string (10 digit number)
+    - first_name: string
+    - last_name: string
+    - email: string (email validation)
+    - password: string (4-8 characters)
+    """
 
     def post(self, request, *args, **kwargs):
         user = UserSerializer(data=request.data)
