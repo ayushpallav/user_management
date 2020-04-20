@@ -1,4 +1,5 @@
 import re
+import uuid
 
 from django.contrib.auth.models import User
 from rest_framework import serializers
@@ -18,6 +19,7 @@ class UserSerializer(serializers.Serializer):
     last_name = serializers.CharField()
     email = serializers.CharField()
     password = serializers.CharField()
+    uuidt = serializers.CharField(read_only=True)
 
     def validate_phone_number(self, phone_number):
         if not re.match('^.{10}$', phone_number):
@@ -31,9 +33,12 @@ class UserSerializer(serializers.Serializer):
         )
         user.set_password(validated_data["password"])
         user_id = user.save()
+        uuidt = uuid.uuid4().hex
         UserDetail.objects.create(
+            uuidt=uuidt,
             user_id=user.id,
             address=validated_data["address"],
             phone_number=validated_data["phone_number"]
         )
+        validated_data['uuidt'] = uuidt
         return validated_data

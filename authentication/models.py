@@ -16,6 +16,10 @@ class UserDetail(models.Model):
         User,
         on_delete=models.CASCADE
     )
+    uuidt = models.UUIDField(
+    	unique=True,
+    	help_text="unique uuid Identity of the user"
+	)
     address = models.CharField(
     	help_text="Address of the user",
         max_length=100,

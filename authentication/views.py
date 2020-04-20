@@ -1,11 +1,13 @@
 
 import json
 from rest_framework import views
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
 from django.db.utils import IntegrityError
+from django.contrib.auth import authenticate
 
 from authentication.models import UserDetail
 from authentication.serializers import UserSerializer
@@ -33,15 +35,11 @@ class SignUpView(TokenObtainPairView):
               content_type="application/json"
             )
         try:
-            user.save()
+            user_obj = user.save()
         except IntegrityError:
             raise ValidationError({"user": "Listen Morty! The user already exists, log in instead"})
         render = super().post(request, *args, **kwargs)
-        obj = User.objects.filter(
-            username=user.data.get('username'),
-            email=user.data.get('email')
-        ).first()
-        render.data['user_id'] = obj.id
+        render.data['uuidt'] = user_obj.get('uuidt')
         return render
 
 
@@ -59,10 +57,13 @@ class LoginView(TokenObtainPairView):
     """
 
     def post(self, request, *args, **kwargs):
+        user = authenticate(
+            username=request.data.get('username'),
+            password=request.data.get('password')
+        )
+        if not user:
+            return HttpResponse('{"user": "Listen Morty! The username/password you have entered is invalid"}', status=401)
         render = super().post(request, *args, **kwargs)
-        obj = User.objects.filter(
-            username=user.data.get('username'),
-            email=user.data.get('email')
-        ).first()
-        render.data['user_id'] = obj.id
+        obj = UserDetail.objects.filter(user_id=user.id).first()
+        render.data['uuidt'] = obj.uuidt
         return render
