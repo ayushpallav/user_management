@@ -13,7 +13,10 @@ class UserSerializer(serializers.Serializer):
     Serializer for user details
     """
     username = serializers.CharField()
-    address = serializers.CharField()
+    society = serializers.CharField()
+    flat = serializers.CharField()
+    floor = serializers.CharField()
+    tower = serializers.CharField()
     phone_number = serializers.CharField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
@@ -37,7 +40,10 @@ class UserSerializer(serializers.Serializer):
         UserDetail.objects.create(
             uuidt=uuidt,
             user_id=user.id,
-            address=validated_data["address"],
+            society=validated_data["society"],
+            flat=validated_data["flat"],
+            floor=validated_data["floor"],
+            tower=validated_data["tower"],
             phone_number=validated_data["phone_number"]
         )
         validated_data['uuidt'] = uuidt
