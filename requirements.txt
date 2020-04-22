@@ -7,3 +7,6 @@ ipython
 PyJWT==1.7.1
 djangorestframework-simplejwt
 django-rest-swagger
+gunicorn==19.9.0
+whitenoise==4.1.2
+django-url-filter==0.3.15

@@ -4,10 +4,13 @@ from rest_framework import views
 from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.contrib.auth import authenticate
+
+from url_filter.integrations.drf import DjangoFilterBackend
 
 from authentication.models import UserDetail
 from authentication.serializers import UserSerializer
