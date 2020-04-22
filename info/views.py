@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import CreateAPIView
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from authentication.models import UserDetail
-from info.serializers import UserDetailSerializer
+from info.serializers import UserDetailSerializer, UserDetailBulkSerializer
 
 
 class UserDetailView(ModelViewSet):
@@ -15,3 +16,12 @@ class UserDetailView(ModelViewSet):
     serializer_class = UserDetailSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['uuidt']
+
+
+class UserDetailBulk(CreateAPIView):
+    """
+    returns all user details
+    for the list of uuidts
+    """
+    queryset = UserDetail.objects.all()
+    serializer_class = UserDetailBulkSerializer
