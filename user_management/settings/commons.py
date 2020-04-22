@@ -36,7 +36,8 @@ class Settings(Configuration):
         'rest_framework',
         'rest_framework_swagger',
         'authentication',
-        'base'
+        'base',
+        'info'
     ]
 
     MIDDLEWARE = [
