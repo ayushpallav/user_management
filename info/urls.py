@@ -9,6 +9,6 @@ router.register(r'user', UserDetailView)
 
 
 urlpatterns=[
-	path('bulk_retrieve', UserDetailBulk.as_view(), name='bulk'),
+	path('/bulk_retrieve', UserDetailBulk.as_view(), name='bulk'),
 	url('/', include(router.urls)),
 ]
