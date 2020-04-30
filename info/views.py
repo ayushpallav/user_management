@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.generics import CreateAPIView
 from url_filter.integrations.drf import DjangoFilterBackend
+from rest_framework.response import Response
 
 from authentication.models import UserDetail
 from info.serializers import UserDetailSerializer, UserDetailBulkSerializer
@@ -15,7 +16,7 @@ class UserDetailView(ModelViewSet):
     queryset = UserDetail.objects.all()
     serializer_class = UserDetailSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['uuidt']
+    filter_fields = ['uuidt', 'phone_number']
 
 
 class UserDetailBulk(CreateAPIView):

@@ -38,6 +38,7 @@ class UserDetail(models.Model):
     )
     phone_number = models.CharField(
         help_text="Primary phone number of the user",
+        unique=True,
         validators=[RegexValidator(regex='^.{10}$', message='Length has to be 10', code='nomatch')],
         max_length=10,
     )
