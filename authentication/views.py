@@ -1,72 +1,57 @@
 
 import json
-from rest_framework import views
+
+from rest_framework import views, status
 from django.http import HttpResponse
+from django.conf import settings
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.views import TokenViewBase
+from rest_framework.generics import CreateAPIView
 from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.contrib.auth import authenticate
-
 from url_filter.integrations.drf import DjangoFilterBackend
 
-from authentication.models import UserDetail
-from authentication.serializers import UserSerializer
+from authentication.models import AuthUser
+from user_management.middlewares.authentication import RegisterTokenAuthentication
+from authentication.serializers import JWTObtainPairSerializer, JWTRefreshSerializer, JWTVerifySerializer
 
 
-class SignUpView(TokenObtainPairView):
+class OTPView(CreateAPIView):
     """
-    Generate a access and refresh token with given payload
-    Parameters needed (all mandatory)
-    - username: string
-    - address: string
-    - phone_number: string (10 digit number)
-    - first_name: string
-    - last_name: string
-    - email: string (email validation)
-    - password: string (4-8 characters)
+    View to provide OTP functionality
     """
+    pass
 
-    def post(self, request, *args, **kwargs):
-        user = UserSerializer(data=request.data)
-        if not user.is_valid():
-            return Response(
-              json.dumps({'Error': "Invalid Payload"}),
-              status=400,
-              content_type="application/json"
-            )
-        try:
-            user_obj = user.save()
-        except IntegrityError:
-            raise ValidationError({"user": "Listen Morty! The user already exists, log in instead"})
-        render = super().post(request, *args, **kwargs)
-        render.data['uuidt'] = user_obj.get('uuidt')
-        return render
-
-
-class LoginView(TokenObtainPairView):
+class JWTObtainPairView(TokenViewBase):
     """
-    Generate a access and refresh token with given payload
-    Parameters needed (all mandatory)
-    - username: string
-    - address: string
-    - phone_number: string (10 digit number)
-    - first_name: string
-    - last_name: string
-    - email: string (email validation)
-    - password: string (4-8 characters)
+    Takes a set of user credentials and returns an access and refresh JSON web
+    token pair to prove the authentication of those credentials.
+    TODO: CHECK FOR VALID OTP
     """
+    serializer_class = JWTObtainPairSerializer
 
-    def post(self, request, *args, **kwargs):
-        user = authenticate(
-            username=request.data.get('username'),
-            password=request.data.get('password')
-        )
-        if not user:
-            return HttpResponse('{"user": "Listen Morty! The username/password you have entered is invalid"}', status=401)
-        render = super().post(request, *args, **kwargs)
-        obj = UserDetail.objects.filter(user_id=user.id).first()
-        render.data['uuidt'] = obj.uuidt
-        return render
+
+class JWTRefreshView(TokenViewBase):
+    """
+    Takes a refresh type JSON web token and returns an access type JSON web
+    token if the refresh token is valid.
+    """
+    serializer_class = JWTRefreshSerializer
+
+
+class JWTVerifyView(TokenViewBase):
+    """
+    Takes a token and indicates if it is valid.  This view provides no
+    information about a token's fitness for a particular use.
+    """
+    serializer_class = JWTVerifySerializer
+
+
+class RegisterView(TokenViewBase):
+    """
+    Register a new user
+    """
+    serializer_class = JWTObtainPairSerializer
+    authentication_classes = [RegisterTokenAuthentication]

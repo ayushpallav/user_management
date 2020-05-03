@@ -71,11 +71,17 @@ class Settings(Configuration):
 
     REST_FRAMEWORK = {
         'DEFAULT_AUTHENTICATION_CLASSES': (
+            'user_management.middlewares.authentication.RegisterTokenAuthentication',
             'rest_framework_simplejwt.authentication.JWTAuthentication',
         )
     }
 
     WSGI_APPLICATION = 'user_management.wsgi.application'
+
+    AUTH_USER_MODEL = 'authentication.AuthUser'
+    AUTHENTICATION_BACKENDS = (
+        'user_management.backends.auth_backend.PasswordlessAuthBackend',
+    )
 
     # Database
     # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -151,3 +157,5 @@ class Settings(Configuration):
         'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
         'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=30),
     }
+
+    SIGNUP_TOKEN_VALIDITY = 1800
