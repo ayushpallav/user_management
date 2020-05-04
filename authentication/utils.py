@@ -31,7 +31,6 @@ class _2FactorOTP:
             response = requests.get(url)
         except:
             raise Exception
-        print(response.json())
         if response.json().get("Details")=="OTP Matched":
             return True
         return False
