@@ -18,3 +18,8 @@ class AuthConstants:
 
 class JWTConstants:
     SIGNUP_EVENT = "No user found for given username, register using the one time token provided"
+
+
+class _2FConstants:
+    SEND_OTP_URL_PATH = "/{api_key}/SMS/+91{phone_number}/AUTOGEN"
+    VERIFY_OTP_URL_PATH = "/{api_key}/SMS/VERIFY/{session_id}/{otp}"

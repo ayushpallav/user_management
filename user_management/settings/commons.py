@@ -71,7 +71,6 @@ class Settings(Configuration):
 
     REST_FRAMEWORK = {
         'DEFAULT_AUTHENTICATION_CLASSES': (
-            'user_management.middlewares.authentication.RegisterTokenAuthentication',
             'rest_framework_simplejwt.authentication.JWTAuthentication',
         )
     }
@@ -159,3 +158,6 @@ class Settings(Configuration):
     }
 
     SIGNUP_TOKEN_VALIDITY = 1800
+
+    OTP_API_KEY = os.environ.get("OTP_API_KEY", "")
+    OTP_BASE_URL = os.environ.get("OTP_BASE_URL", "")

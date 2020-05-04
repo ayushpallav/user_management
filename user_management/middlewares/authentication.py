@@ -3,8 +3,13 @@ import requests
 from datetime import datetime
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.urls import resolve
 from rest_framework import status, authentication, exceptions
+
+from authentication.utils import _2FactorOTP
+
+UserModel = get_user_model()
 
 
 class RegisterTokenAuthentication(authentication.BaseAuthentication):
@@ -23,6 +28,8 @@ class RegisterTokenAuthentication(authentication.BaseAuthentication):
             return (False, 'token_not_found')
         decrypted_payload = jwt.decode(token, settings.SECRET_KEY)
         username, issue_time = decrypted_payload.get('username'), decrypted_payload.get('issue_time')
+        if UserModel.objects.filter(username=username).exists():
+            return (False, 'Gandu registered h tu already')
         if username != body.get('username'):
             return (False, 'username not matching with the token')
         return _valid_time(issue_time)
@@ -47,3 +54,33 @@ class RegisterTokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate_header(self, request):
         return 'Token'
+
+
+class FetchTokenAuthentication(authentication.BaseAuthentication):
+    """
+    To authenticate for /token path:
+    /token:
+    - returns relevant token if user already registered
+    - asks new user to register first if valid OTP provided and
+    """
+
+    def authenticate(self, request):
+        # if user exists-> validate
+        username, otp, session_id = request.data.get("username", ""), request.data.get("otp"), request.data.get("session_id")
+        if not username:
+            raise exceptions.ParseError(
+                {"username": "Is a required field"}
+            )
+        # if user not there-> check for validity of OTP
+        if not otp or not session_id:
+            raise exceptions.AuthenticationFailed(
+                "otp and session_id both are required for a user to get access token"
+            )
+        if _2FactorOTP(username).verify_otp(
+            otp=otp,
+            session_id=session_id
+        ):
+            return (None, None)
+        raise exceptions.AuthenticationFailed(
+            "OTP expired"
+        )

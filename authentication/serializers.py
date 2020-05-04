@@ -12,6 +12,7 @@ from django.conf import settings
 
 from authentication.models import AuthUser
 from authentication.constants import JWTConstants
+from authentication.utils import _2FactorOTP
 
 UserModel = get_user_model()
 
@@ -38,6 +39,19 @@ class UserSerializer(serializers.ModelSerializer):
             "groups": {"write_only": True},
             "user_permissions": {"write_only": True}
         }
+
+
+class OTPSerializer(serializers.Serializer):
+    phone_number = serializers.CharField()
+    session_id = serializers.CharField(read_only=True)
+
+    def create(self, validated_data):
+        try:
+            session_id = _2FactorOTP(validated_data["phone_number"]).send_otp()
+        except:
+            raise Exception("Not able to send OTP")
+        validated_data['session_id'] = session_id
+        return validated_data
 
 
 class JWTAuthenticationSerializer(serializers.Serializer):

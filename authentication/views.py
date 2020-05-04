@@ -14,23 +14,24 @@ from django.contrib.auth import authenticate
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from authentication.models import AuthUser
-from user_management.middlewares.authentication import RegisterTokenAuthentication
-from authentication.serializers import JWTObtainPairSerializer, JWTRefreshSerializer, JWTVerifySerializer
+from user_management.middlewares.authentication import RegisterTokenAuthentication, FetchTokenAuthentication
+from authentication.serializers import OTPSerializer, JWTObtainPairSerializer, JWTRefreshSerializer, JWTVerifySerializer
 
 
 class OTPView(CreateAPIView):
     """
     View to provide OTP functionality
     """
-    pass
+    serializer_class = OTPSerializer
+
 
 class JWTObtainPairView(TokenViewBase):
     """
     Takes a set of user credentials and returns an access and refresh JSON web
     token pair to prove the authentication of those credentials.
-    TODO: CHECK FOR VALID OTP
     """
     serializer_class = JWTObtainPairSerializer
+    authentication_classes = [FetchTokenAuthentication]
 
 
 class JWTRefreshView(TokenViewBase):
