@@ -1,24 +1,48 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, UserManager, AbstractUser
 
 from django.contrib.postgres.fields import JSONField
 from django.core.validators import RegexValidator
 
 from django.conf import settings
 
+from authentication.constants import AuthConstants
 
-class UserDetail(models.Model):
+
+class AuthUserManager(UserManager):
     """
-    Extends user model of django.auth
-    stores further information needed for a user
+    Extends UserManager class to make
+    custom manager object for AuthUser model
+    implementing passwordless authentication
     """
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE
-    )
+    pass
+
+
+class AuthUser(AbstractUser):
+    """
+    Extends auth user model
+    """
+    REQ_FIELDS = [
+        AuthConstants.USERNAME,
+        AuthConstants.FIRST_NAME,
+        AuthConstants.LAST_NAME,
+        AuthConstants.EMAIL,
+        AuthConstants.SOCIETY,
+        AuthConstants.FLAT,
+        AuthConstants.FLOOR,
+        AuthConstants.TOWER,
+        AuthConstants.PHONE_NUMBER
+    ]
+
+    objects = AuthUserManager()
+
     uuidt = models.UUIDField(
         unique=True,
         help_text="unique uuid Identity of the user"
+    )
+    password = models.CharField(
+        max_length=128,
+        null=True
     )
     society = models.CharField(
         help_text="Society of the user",
@@ -44,4 +68,4 @@ class UserDetail(models.Model):
     )
 
     def __str__(self):
-        return self.user.username
+        return self.username

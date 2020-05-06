@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from authentication.models import UserDetail
+from authentication.models import AuthUser
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 		return obj.user.last_name
 
 	class Meta:
-		model = UserDetail
+		model = AuthUser
 		fields = ('__all__')
 
 
@@ -44,7 +44,7 @@ class UserDetailBulkSerializer(serializers.Serializer):
 				"floor": x.floor
 			}
 			for x in list(
-				UserDetail.objects.filter(uuidt__in=validated_data["uuidts"])
+				AuthUser.objects.filter(uuidt__in=validated_data["uuidts"])
 			)
 		]
 		return validated_data
