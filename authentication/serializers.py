@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 from django.conf import settings
 
 from authentication.models import AuthUser
-from authentication.constants import JWTConstants
+from authentication.constants import JWTConstants, ExceptionMessages
 from authentication.utils import _2FactorOTP
 
 UserModel = get_user_model()
@@ -49,7 +49,7 @@ class OTPSerializer(serializers.Serializer):
         try:
             session_id = _2FactorOTP(validated_data["phone_number"]).send_otp()
         except:
-            raise Exception("Not able to send OTP")
+            raise Exception(ExceptionMessages.OTP_NOT_SENT)
         validated_data['session_id'] = session_id
         return validated_data
 

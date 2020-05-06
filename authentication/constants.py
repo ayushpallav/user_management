@@ -21,5 +21,9 @@ class JWTConstants:
 
 
 class _2FConstants:
-    SEND_OTP_URL_PATH = "/{api_key}/SMS/+91{phone_number}/AUTOGEN"
+    SEND_OTP_URL_PATH = "/{api_key}/SMS/+91{phone_number}/AUTOGEN/OTPLOGIN"
     VERIFY_OTP_URL_PATH = "/{api_key}/SMS/VERIFY/{session_id}/{otp}"
+
+
+class ExceptionMessages:
+    OTP_NOT_SENT = "Not able to send OTP"

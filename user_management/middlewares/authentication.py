@@ -82,5 +82,5 @@ class FetchTokenAuthentication(authentication.BaseAuthentication):
         ):
             return (None, None)
         raise exceptions.AuthenticationFailed(
-            "OTP expired"
+            "Invalid OTP"
         )
