@@ -152,9 +152,9 @@ class Settings(Configuration):
     # Project related variables
     # JWT token related settings
 
-    JWT_AUTH = {
-        'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
-        'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=30),
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1),
+        'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30),
     }
 
     SIGNUP_TOKEN_VALIDITY = 1800
