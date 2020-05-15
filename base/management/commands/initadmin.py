@@ -1,4 +1,6 @@
 """Script to create superuser"""
+import uuid
+
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 
@@ -17,7 +19,8 @@ class Command(BaseCommand):
 			admin = user.objects.create_superuser(
 				username=os.environ["SUPERUSER_USERNAME"],
 				email=os.environ["SUPERUSER_EMAIL"],
-				password=os.environ["SUPERUSER_PASSWORD"]
+				password=os.environ["SUPERUSER_PASSWORD"],
+				uuidt=uuid.uuid4().hex
 			)
 
 			self.stdout.write(
