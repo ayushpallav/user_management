@@ -42,12 +42,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class OTPSerializer(serializers.Serializer):
-    phone_number = serializers.CharField()
+    username = serializers.CharField()
     session_id = serializers.CharField(read_only=True)
 
     def create(self, validated_data):
         try:
-            session_id = _2FactorOTP(validated_data["phone_number"]).send_otp()
+            session_id = _2FactorOTP(
+                phone_number=validated_data["username"]
+            ).send_otp()
         except:
             raise Exception(ExceptionMessages.OTP_NOT_SENT)
         validated_data['session_id'] = session_id
@@ -100,7 +102,7 @@ class JWTAuthenticationSerializer(serializers.Serializer):
             "username": username
         }
         return {
-            "event": JWTConstants.SIGNUP_EVENT,
+            "registered": False,
             "token": jwt.encode(payload, settings.SECRET_KEY),
             "username": username,
             "required_fields": AuthUser.REQ_FIELDS
