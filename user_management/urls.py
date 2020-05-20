@@ -21,9 +21,14 @@ from rest_framework_swagger.views import get_swagger_view
 
 schema_view = get_swagger_view(title='User Management APIs')
 
-urlpatterns = [
+url_patterns_without_base = [
     path('admin/', admin.site.urls),
     path(r'auth/',include('authentication.urls')),
     path(r'info',include('info.urls')),
     url(r'^swagger$', schema_view),
+]
+
+urlpatterns = [
+    path('api/user_management/', include(url_patterns_without_base)),
+    path('', include(url_patterns_without_base)),
 ]
