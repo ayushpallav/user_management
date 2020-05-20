@@ -153,8 +153,8 @@ class Settings(Configuration):
     # JWT token related settings
 
     SIMPLE_JWT = {
-        'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=5),
-        'REFRESH_TOKEN_LIFETIME': datetime.timedelta(minutes=30),
+        'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1000),
+        'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1000),
     }
 
     SIGNUP_TOKEN_VALIDITY = 1800
