@@ -128,6 +128,7 @@ class JWTObtainPairSerializer(JWTAuthenticationSerializer):
 
         refresh = self.get_token(self.user)
 
+        data['registered'] = True
         data['refresh'] = str(refresh)
         data['access'] = str(refresh.access_token)
         data['uuidt'] = self.user.uuidt
