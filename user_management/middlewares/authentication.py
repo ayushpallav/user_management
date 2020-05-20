@@ -8,6 +8,7 @@ from django.urls import resolve
 from rest_framework import status, authentication, exceptions
 
 from authentication.utils import _2FactorOTP
+from authentication.serializers import UserSerializer
 
 UserModel = get_user_model()
 
@@ -29,7 +30,7 @@ class RegisterTokenAuthentication(authentication.BaseAuthentication):
         decrypted_payload = jwt.decode(token, settings.SECRET_KEY)
         username, issue_time = decrypted_payload.get('username'), decrypted_payload.get('issue_time')
         if UserModel.objects.filter(username=username).exists():
-            return (False, 'Gandu registered h tu already')
+            return (False, 'User already registered with this username, try logging in')
         if username != body.get('username'):
             return (False, 'username not matching with the token')
         return _valid_time(issue_time)
@@ -48,6 +49,12 @@ class RegisterTokenAuthentication(authentication.BaseAuthentication):
         if not valid:
             raise exceptions.AuthenticationFailed(
                 reason
+            )
+
+        _user = UserSerializer(data=request.data)
+        if not _user.is_valid():
+            raise exceptions.ParseError(
+                "Bad data requested"
             )
 
         return (None, None)
