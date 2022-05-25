@@ -4,7 +4,7 @@ psycopg2>=2.7,<3.0
 python-dotenv
 django-configurations==2.1
 ipython
-PyJWT==1.7.1
+PyJWT==2.4.0
 djangorestframework-simplejwt
 django-rest-swagger
 gunicorn==19.9.0
